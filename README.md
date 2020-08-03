@@ -4,10 +4,10 @@ Carbon Fields extension, adding "taxonomy" field type. It is select with ajax lo
 
 ### Requirements
 
-* [Carbon Fields 2](https://github.com/htmlburger/carbon-fields)
+* [Carbon Fields 3](https://github.com/htmlburger/carbon-fields)
 
 
-## Example Usage
+## Installation
 
 Add the following to composer.json:
 
@@ -20,10 +20,17 @@ Add the following to composer.json:
 ],
 "require": {
   "php": ">=5.3.2",
-  "htmlburger/carbon-fields": "^2.0.0",
-  "leurdo/carbon-field-taxonomy": "*",
+  "htmlburger/carbon-fields": "^3.0.0",
+  "leurdo/carbon-field-taxonomy": "dev-master",
   "composer/installers": "^1.3.0"
 }
+```
+
+## Usage
+
+```
+Field::make( 'taxonomy', 'field_name', 'Field Label' )
+   ->set_tax( 'mytax' )
 ```
 
 
