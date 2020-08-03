@@ -30,7 +30,10 @@ Add the following to composer.json:
 
 ```
 Field::make( 'taxonomy', 'field_name', 'Field Label' )
-   ->set_tax( 'mytax' )
+    ->set_tax( 'mytax' )
+    ->set_placeholder( 'Select...' )
+    ->set_create( 'Create' )
+    ->set_loading( 'Loading...' )
 ```
 
 

@@ -18,6 +18,27 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	protected $tax = '';
 
 	/**
+	 * Input placeholder
+	 *
+	 * @var string
+	 */
+	protected $placeholder = '';
+
+	/**
+	 * Create label text
+	 *
+	 * @var string
+	 */
+	protected $create = '';
+
+	/**
+	 * Loading label text
+	 *
+	 * @var string
+	 */
+	protected $loading = '';
+
+	/**
 	 * Instance initialization when in the admin area
 	 * Called during field boot
 	 */
@@ -100,6 +121,9 @@ class Taxonomy_Field extends Predefined_Options_Field {
 			[
 				'value'   => $value_array,
 				'options' => $options,
+				'placeholder' => $this->placeholder ? $this->placeholder : __('Select...', 'carbon-field-Taxonomy'),
+				'loading' => $this->loading ? $this->loading : __('Loading...', 'carbon-field-Taxonomy'),
+				'create' => $this->create ? $this->create : __('Create', 'carbon-field-Taxonomy'),
 			]
 		);
 
@@ -194,6 +218,39 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	 */
 	public function set_tax( $tax ) {
 		$this->tax = $tax;
+		return $this;
+	}
+
+	/**
+	 * Set input placeholder
+	 *
+	 * @param string $placeholder
+	 * @return Taxonomy_Field
+	 */
+	public function set_placeholder( $placeholder ) {
+		$this->placeholder = $placeholder;
+		return $this;
+	}
+
+	/**
+	 * Set create term label
+	 *
+	 * @param string $create
+	 * @return Taxonomy_Field
+	 */
+	public function set_create( $create ) {
+		$this->tax = $create;
+		return $this;
+	}
+
+	/**
+	 * Set loading label
+	 *
+	 * @param string $loading
+	 * @return Taxonomy_Field
+	 */
+	public function set_loading( $loading ) {
+		$this->tax = $loading;
 		return $this;
 	}
 }

@@ -51,10 +51,10 @@ class TaxonomyField extends Component {
 		const { name, field } = this.props;
 		const { value, isLoading } = this.state;
 		const loadingMessage = () => {
-			return __('Loading...', 'carbon-fields-ui');
+			return field.loading;
 		}
 		const createLabel = (inputValue) => {
-			return __('Create', 'carbon-fields-ui') + ' ' + inputValue;
+			return field.create + ' ' + inputValue;
 		}
 
 		return (
@@ -70,7 +70,7 @@ class TaxonomyField extends Component {
 					value={value}
 					isLoading={isLoading}
 					isDisabled={isLoading}
-					placeholder={__('Select...', 'carbon-fields-ui')}
+					placeholder={field.placeholder}
 					loadingMessage={loadingMessage}
 					inputId="react-taxonomy"
 					formatCreateLabel={createLabel}
