@@ -12,7 +12,7 @@ class TaxonomyField extends Component {
 		isLoading: false,
 	};
 
-	loadOptions(inputValue) {
+	loadOptions = inputValue => {
 		return new Promise((resolve, reject) => {
 			wp.ajax.post('whisk_get_filtered_terms', {
 				inputValue: inputValue,
