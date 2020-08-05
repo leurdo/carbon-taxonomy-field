@@ -3,6 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "X-Generator: babel-plugin-makepot\n"
 
-#: src/main.js:46
+#: src/main.js:48
 msgid "An error occurred while trying to fetch files data."
 msgstr ""

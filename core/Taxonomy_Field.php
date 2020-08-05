@@ -155,12 +155,13 @@ class Taxonomy_Field extends Predefined_Options_Field {
 		$field_data = array_merge(
 			$field_data,
 			[
-				'value'   => $value_array,
-				'options' => $options,
-				'placeholder' => $this->placeholder ? $this->placeholder : __('Select...', 'carbon-field-Taxonomy'),
-				'loading' => $this->loading ? $this->loading : __('Loading...', 'carbon-field-Taxonomy'),
-				'create' => $this->create ? $this->create : __('Create', 'carbon-field-Taxonomy'),
-				'multiple' => $this->multiple,
+				'value'       => $value_array,
+				'options'     => $options,
+				'placeholder' => $this->placeholder ? $this->placeholder : __( 'Select...', 'carbon-field-Taxonomy' ),
+				'loading'     => $this->loading ? $this->loading : __( 'Loading...', 'carbon-field-Taxonomy' ),
+				'create'      => $this->create ? $this->create : __( 'Create', 'carbon-field-Taxonomy' ),
+				'multiple'    => $this->multiple,
+				'tax'    => $this->tax,
 			]
 		);
 
@@ -224,6 +225,15 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	public function whisk_get_filtered_terms() {
 		check_ajax_referer( 'carbon_taxonomy', 'nonce' );
 
+		$tax = sanitize_text_field( wp_unslash( $_POST['tax'] ) );
+		if ( ! taxonomy_exists( $tax ) ) {
+			return wp_send_json_success(
+				[
+					'options' => $this->parse_options( $this->get_options(), true ),
+				]
+			);
+		}
+		$this->set_tax( $tax );
 		$options = [];
 		$search  = isset( $_POST['inputValue'] ) ? sanitize_text_field( wp_unslash( $_POST['inputValue'] ) ) : '';
 		if ( ! $search ) {
@@ -256,6 +266,15 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	public function whisk_create_term() {
 		check_ajax_referer( 'carbon_taxonomy', 'nonce' );
 
+		$tax = sanitize_text_field( wp_unslash( $_POST['tax'] ) );
+		if ( ! taxonomy_exists( $tax ) ) {
+			return wp_send_json_success(
+				[
+					'option' => $this->parse_options( [], true ),
+				]
+			);
+		}
+		$this->set_tax( $tax );
 		$option = [];
 		$new_option_name = isset( $_POST['inputValue'] ) ? sanitize_text_field( wp_unslash( $_POST['inputValue'] ) ) : '';
 		$insert_data = wp_insert_term(
@@ -303,7 +322,7 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	 * @return Taxonomy_Field
 	 */
 	public function set_create( $create ) {
-		$this->tax = $create;
+		$this->create = $create;
 		return $this;
 	}
 
@@ -314,7 +333,7 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	 * @return Taxonomy_Field
 	 */
 	public function set_loading( $loading ) {
-		$this->tax = $loading;
+		$this->loading = $loading;
 		return $this;
 	}
 

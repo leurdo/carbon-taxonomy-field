@@ -16,6 +16,7 @@ class TaxonomyField extends Component {
 		return new Promise((resolve, reject) => {
 			wp.ajax.post('whisk_get_filtered_terms', {
 				inputValue: inputValue,
+				tax: this.props.field.tax,
 				nonce: window.carbon_taxonomy.nonce,
 			}).done( response => {
 				resolve(response.options);
@@ -35,6 +36,7 @@ class TaxonomyField extends Component {
 		});
 		wp.ajax.post('whisk_create_term', {
 			inputValue: inputValue,
+			tax: this.props.field.tax,
 			nonce: window.carbon_taxonomy.nonce,
 		}).done( response => {
 			const result = this.props.field.multiple ? value.concat(response.option) : response.option;
@@ -70,26 +72,26 @@ class TaxonomyField extends Component {
 		const inputId = 'input_' + field.id;
 
 		return (
-				<AsyncCreatableSelect
-					id={field.id}
-					name={name}
-					defaultValue={field.value}
-					defaultOptions={field.options}
-					loadOptions={this.loadOptions}
-					classNamePrefix="react-taxonomy"
-					isClearable
-					onCreateOption={this.handleCreate}
-					onChange={this.handleChange}
-					value={value}
-					isLoading={isLoading}
-					isDisabled={isLoading}
-					placeholder={field.placeholder}
-					loadingMessage={loadingMessage}
-					inputId={inputId}
-					formatCreateLabel={createLabel}
-					delimiter="|"
-					isMulti={field.multiple}
-				/>
+			<AsyncCreatableSelect
+				id={field.id}
+				name={name}
+				defaultValue={field.value}
+				defaultOptions={field.options}
+				loadOptions={this.loadOptions}
+				classNamePrefix="react-taxonomy"
+				isClearable
+				onCreateOption={this.handleCreate}
+				onChange={this.handleChange}
+				value={value}
+				isLoading={isLoading}
+				isDisabled={isLoading}
+				placeholder={field.placeholder}
+				loadingMessage={loadingMessage}
+				inputId={inputId}
+				formatCreateLabel={createLabel}
+				delimiter="|"
+				isMulti={field.multiple}
+			/>
 		);
 	}
 
