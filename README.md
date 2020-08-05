@@ -1,6 +1,7 @@
 # Taxonomy Carbon Field
 
-Carbon Fields extension, adding "taxonomy" field type. It is select with ajax load and creation of new term.
+Carbon Fields extension, adding "taxonomy" field type. This is select with ajax load and creation of new term.
+Now multiselect is also supported (see Usage).
 
 ### Requirements
 
@@ -34,6 +35,7 @@ Field::make( 'taxonomy', 'field_name', 'Field Label' )
     ->set_placeholder( 'Select...' )
     ->set_create( 'Create' )
     ->set_loading( 'Loading...' )
+    ->set_multiple( true )
 ```
 
 

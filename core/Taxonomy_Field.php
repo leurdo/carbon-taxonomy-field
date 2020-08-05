@@ -3,6 +3,9 @@
 namespace Carbon_Field_Taxonomy;
 
 use Carbon_Fields\Field\Predefined_Options_Field;
+use Carbon_Fields\Helper\Delimiter;
+use Carbon_Fields\Helper\Helper;
+use Carbon_Fields\Value_Set\Value_Set;
 
 /**
  * Class Taxonomy_Field
@@ -37,6 +40,25 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	 * @var string
 	 */
 	protected $loading = '';
+
+	/**
+	 * Multiselect flag
+	 *
+	 * @var bool
+	 */
+	protected $multiple = false;
+
+	/**
+	 * Create a field from a certain type with the specified label.
+	 *
+	 * @param string $type  Field type
+	 * @param string $name  Field name
+	 * @param string $label Field label
+	 */
+	public function __construct( $type, $name, $label ) {
+		$this->set_value_set( new Value_Set( Value_Set::TYPE_MULTIPLE_VALUES ) );
+		parent::__construct( $type, $name, $label );
+	}
 
 	/**
 	 * Instance initialization when in the admin area
@@ -76,10 +98,10 @@ class Taxonomy_Field extends Predefined_Options_Field {
 		$root_uri = \Carbon_Fields\Carbon_Fields::directory_to_url( \Carbon_Field_Taxonomy\DIR );
 
 		// Enqueue field styles.
-		wp_enqueue_style( 'carbon-field-Taxonomy', $root_uri . '/build/bundle.min.css', array(), TAXONOMY_VERSION );
+		wp_enqueue_style( 'carbon-field-Taxonomy', $root_uri . '/build/bundle.min.css', array(), CARBON_TAXONOMY_VERSION );
 
 		// Enqueue field scripts.
-		wp_enqueue_script( 'carbon-field-Taxonomy', $root_uri . '/build/bundle.min.js', array( 'carbon-fields-core' ), TAXONOMY_VERSION, true );
+		wp_enqueue_script( 'carbon-field-Taxonomy', $root_uri . '/build/bundle.min.js', array( 'carbon-fields-core' ), CARBON_TAXONOMY_VERSION, true );
 		wp_localize_script(
 			'carbon-field-Taxonomy',
 			'carbon_taxonomy',
@@ -93,10 +115,16 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	 * {@inheritDoc}
 	 */
 	public function set_value_from_input( $input ) {
-		$value = null;
-		if ( isset( $input[ $this->get_name() ] ) ) {
-			$value = $input[ $this->get_name() ];
+		if ( ! isset( $input[ $this->get_name() ] ) ) {
+			return $this->set_value( array() );
 		}
+
+		$value_delimiter = '|';
+		$options_values = $this->get_options_values();
+
+		$value = stripslashes_deep( $input[ $this->get_name() ] );
+		$value = Delimiter::split( $value, $value_delimiter );
+		$value = Helper::get_valid_options( $value, $options_values );
 
 		return $this->set_value( $value );
 	}
@@ -109,12 +137,20 @@ class Taxonomy_Field extends Predefined_Options_Field {
 		$raw_options = $this->get_options();
 
 		$options     = $this->parse_options( $raw_options, true );
-		$value       = intval( $this->get_value() );
-		$term = get_term( $value );
-		$value_array = ! is_wp_error( $term ) ? [
-			'value' => $term->term_id,
-			'label' => $term->name,
-		] : null;
+		$value       = $this->get_value();
+		$value_array = [];
+
+		if ( $value && is_array( $value ) ) {
+			foreach ( $value as $item ) {
+				$term = get_term( $item );
+				if ( ! is_wp_error( $term ) ) {
+					$value_array[] = [
+						'value' => $term->term_id,
+						'label' => $term->name,
+					];
+				}
+			}
+		}
 
 		$field_data = array_merge(
 			$field_data,
@@ -124,6 +160,7 @@ class Taxonomy_Field extends Predefined_Options_Field {
 				'placeholder' => $this->placeholder ? $this->placeholder : __('Select...', 'carbon-field-Taxonomy'),
 				'loading' => $this->loading ? $this->loading : __('Loading...', 'carbon-field-Taxonomy'),
 				'create' => $this->create ? $this->create : __('Create', 'carbon-field-Taxonomy'),
+				'multiple' => $this->multiple,
 			]
 		);
 
@@ -139,7 +176,7 @@ class Taxonomy_Field extends Predefined_Options_Field {
 			[
 				'taxonomy'   => $this->tax,
 				'hide_empty' => false,
-				'number'     => 5,
+				'number'     => 20,
 				'orderby'    => 'count',
 			]
 		);
@@ -150,6 +187,33 @@ class Taxonomy_Field extends Predefined_Options_Field {
 		}
 
 		return $options;
+	}
+
+	private function get_all_options() {
+		$options = [];
+		$terms   = get_terms(
+			[
+				'taxonomy'   => $this->tax,
+				'hide_empty' => false,
+			]
+		);
+		if ( $terms ) {
+			foreach ( $terms as $term ) {
+				$options[ $term->term_id ] = $term->name;
+			}
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Retrieve the current options' values only.
+	 *
+	 * @return array $options
+	 */
+	protected function get_options_values() {
+		$options = $this->parse_options( $this->get_all_options() );
+		return wp_list_pluck( $options, 'value' );
 	}
 
 	/**
@@ -251,6 +315,17 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	 */
 	public function set_loading( $loading ) {
 		$this->tax = $loading;
+		return $this;
+	}
+
+	/**
+	 * Set multiselect
+	 *
+	 * @param string $loading
+	 * @return Taxonomy_Field
+	 */
+	public function set_multiple( $is_multiple ) {
+		$this->multiple = $is_multiple;
 		return $this;
 	}
 }

@@ -26,6 +26,10 @@ class TaxonomyField extends Component {
 	}
 
 	handleCreate = inputValue => {
+		let { value } = this.state;
+		if (value === undefined) {
+			value = this.props.field.value;
+		}
 		this.setState({
 			isLoading: true,
 		});
@@ -33,13 +37,20 @@ class TaxonomyField extends Component {
 			inputValue: inputValue,
 			nonce: window.carbon_taxonomy.nonce,
 		}).done( response => {
+			const result = this.props.field.multiple ? value.concat(response.option) : response.option;
 			this.setState({
-				value: response.option,
+				value: result,
 				isLoading: false,
 			});
 		}).fail( () => {
 			reject( __( 'An error occurred while trying to fetch files data.', 'carbon-fields-ui' ) );
 		} );
+	}
+
+	handleChange = (newValue, actionMeta) => {
+		this.setState({
+			value: newValue,
+		});
 	}
 
 	/**
@@ -56,6 +67,7 @@ class TaxonomyField extends Component {
 		const createLabel = (inputValue) => {
 			return field.create + ' ' + inputValue;
 		}
+		const inputId = 'input_' + field.id;
 
 		return (
 				<AsyncCreatableSelect
@@ -67,13 +79,16 @@ class TaxonomyField extends Component {
 					classNamePrefix="react-taxonomy"
 					isClearable
 					onCreateOption={this.handleCreate}
+					onChange={this.handleChange}
 					value={value}
 					isLoading={isLoading}
 					isDisabled={isLoading}
 					placeholder={field.placeholder}
 					loadingMessage={loadingMessage}
-					inputId="react-taxonomy"
+					inputId={inputId}
 					formatCreateLabel={createLabel}
+					delimiter="|"
+					isMulti={field.multiple}
 				/>
 		);
 	}

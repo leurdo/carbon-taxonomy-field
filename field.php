@@ -4,7 +4,7 @@ use Carbon_Fields\Carbon_Fields;
 use Carbon_Field_Taxonomy\Taxonomy_Field;
 
 define( 'Carbon_Field_Taxonomy\\DIR', __DIR__ );
-define( 'TAXONOMY_VERSION', '1.0.0');
+define( 'CARBON_TAXONOMY_VERSION', '1.0.0');
 
 if ( ! is_cli() ) {
 	Carbon_Fields::extend(
