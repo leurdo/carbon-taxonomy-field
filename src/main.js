@@ -14,7 +14,7 @@ class TaxonomyField extends Component {
 
 	loadOptions = inputValue => {
 		return new Promise((resolve, reject) => {
-			wp.ajax.post('whisk_get_filtered_terms', {
+			wp.ajax.post('carbon_taxonomy_get_filtered_terms', {
 				inputValue: inputValue,
 				tax: this.props.field.tax,
 				nonce: window.carbon_taxonomy.nonce,
@@ -34,7 +34,7 @@ class TaxonomyField extends Component {
 		this.setState({
 			isLoading: true,
 		});
-		wp.ajax.post('whisk_create_term', {
+		wp.ajax.post('carbon_taxonomy_create_term', {
 			inputValue: inputValue,
 			tax: this.props.field.tax,
 			nonce: window.carbon_taxonomy.nonce,
@@ -49,7 +49,7 @@ class TaxonomyField extends Component {
 		} );
 	}
 
-	handleChange = (newValue, actionMeta) => {
+	handleChange = (newValue) => {
 		this.setState({
 			value: newValue,
 		});

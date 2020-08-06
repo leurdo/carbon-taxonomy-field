@@ -7,7 +7,6 @@
   box-shadow: none;
   border-radius: 3px;
   min-height: 30px;
-  max-width: 25rem;
   vertical-align: middle; }
   .react-taxonomy__control--is-focused {
     border-color: #007cba !important; }

@@ -65,8 +65,8 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	 * Called during field boot
 	 */
 	public function init() {
-		add_action( 'wp_ajax_whisk_get_filtered_terms', [ $this, 'whisk_get_filtered_terms' ] );
-		add_action( 'wp_ajax_whisk_create_term', [ $this, 'whisk_create_term' ] );
+		add_action( 'wp_ajax_carbon_taxonomy_get_filtered_terms', [ $this, 'carbon_taxonomy_get_filtered_terms' ] );
+		add_action( 'wp_ajax_carbon_taxonomy_create_term', [ $this, 'carbon_taxonomy_create_term' ] );
 	}
 
 	/**
@@ -190,6 +190,11 @@ class Taxonomy_Field extends Predefined_Options_Field {
 		return $options;
 	}
 
+	/**
+	 * Get all taxonomy terms for term validation
+	 *
+	 * @return array
+	 */
 	private function get_all_options() {
 		$options = [];
 		$terms   = get_terms(
@@ -222,7 +227,7 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	 *
 	 * @return string
 	 */
-	public function whisk_get_filtered_terms() {
+	public function carbon_taxonomy_get_filtered_terms() {
 		check_ajax_referer( 'carbon_taxonomy', 'nonce' );
 
 		$tax = sanitize_text_field( wp_unslash( $_POST['tax'] ) );
@@ -233,7 +238,7 @@ class Taxonomy_Field extends Predefined_Options_Field {
 				]
 			);
 		}
-		$this->set_tax( $tax );
+		$this->set_taxonomy( $tax );
 		$options = [];
 		$search  = isset( $_POST['inputValue'] ) ? sanitize_text_field( wp_unslash( $_POST['inputValue'] ) ) : '';
 		if ( ! $search ) {
@@ -263,7 +268,7 @@ class Taxonomy_Field extends Predefined_Options_Field {
 		);
 	}
 
-	public function whisk_create_term() {
+	public function carbon_taxonomy_create_term() {
 		check_ajax_referer( 'carbon_taxonomy', 'nonce' );
 
 		$tax = sanitize_text_field( wp_unslash( $_POST['tax'] ) );
@@ -274,7 +279,7 @@ class Taxonomy_Field extends Predefined_Options_Field {
 				]
 			);
 		}
-		$this->set_tax( $tax );
+		$this->set_taxonomy( $tax );
 		$option = [];
 		$new_option_name = isset( $_POST['inputValue'] ) ? sanitize_text_field( wp_unslash( $_POST['inputValue'] ) ) : '';
 		$insert_data = wp_insert_term(
@@ -299,7 +304,7 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	 * @param string $tax
 	 * @return Taxonomy_Field
 	 */
-	public function set_tax( $tax ) {
+	public function set_taxonomy( $tax ) {
 		$this->tax = $tax;
 		return $this;
 	}
