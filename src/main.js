@@ -39,7 +39,7 @@ class TaxonomyField extends Component {
 			tax: this.props.field.tax,
 			nonce: window.carbon_taxonomy.nonce,
 		}).done( response => {
-			const result = this.props.field.multiple ? value.concat(response.option) : response.option;
+			const result = (this.props.field.multiple && value) ? value.concat(response.option) : response.option;
 			this.setState({
 				value: result,
 				isLoading: false,
