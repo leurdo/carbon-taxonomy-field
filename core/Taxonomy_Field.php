@@ -2,6 +2,7 @@
 
 namespace Carbon_Field_Taxonomy;
 
+use Carbon_Fields\Carbon_Fields;
 use Carbon_Fields\Field\Predefined_Options_Field;
 use Carbon_Fields\Helper\Delimiter;
 use Carbon_Fields\Helper\Helper;
@@ -95,13 +96,14 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	 * @return void
 	 */
 	public static function admin_enqueue_scripts() {
-		$root_uri = \Carbon_Fields\Carbon_Fields::directory_to_url( \Carbon_Field_Taxonomy\DIR );
+		$root_uri = Carbon_Fields::directory_to_url( DIR );
 
 		// Enqueue field styles.
 		wp_enqueue_style( 'carbon-field-Taxonomy', $root_uri . '/build/bundle.min.css', array(), CARBON_TAXONOMY_VERSION );
 
 		// Enqueue field scripts.
 		wp_enqueue_script( 'carbon-field-Taxonomy', $root_uri . '/build/bundle.min.js', array( 'carbon-fields-core' ), CARBON_TAXONOMY_VERSION, true );
+
 		wp_localize_script(
 			'carbon-field-Taxonomy',
 			'carbon_taxonomy',
