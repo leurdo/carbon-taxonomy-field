@@ -39,11 +39,22 @@ class TaxonomyField extends Component {
 			tax: this.props.field.tax,
 			nonce: window.carbon_taxonomy.nonce,
 		}).done( response => {
-			const result = (this.props.field.multiple && value) ? value.concat(response.option) : response.option;
+			let result = (this.props.field.multiple && value) ? value.concat(response.option) : response.option;
 			this.setState({
 				value: result,
 				isLoading: false,
 			});
+
+			const {
+				id,
+				onChange
+			} = this.props;
+
+			if (!Array.isArray(result)) {
+				result = [result];
+			}
+			onChange( id, result );
+
 		}).fail( () => {
 			reject( __( 'An error occurred while trying to fetch files data.', 'carbon-fields-ui' ) );
 		} );
