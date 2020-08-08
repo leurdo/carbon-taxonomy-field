@@ -50,9 +50,20 @@ class TaxonomyField extends Component {
 	}
 
 	handleChange = (newValue) => {
+		const {
+			id,
+			onChange
+		} = this.props;
+
 		this.setState({
 			value: newValue,
 		});
+
+		if (!Array.isArray(newValue)) {
+			newValue = [newValue];
+		}
+
+		onChange( id, newValue );
 	}
 
 	/**
