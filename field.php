@@ -1,5 +1,7 @@
 <?php
 
+namespace Carbon_Field_Taxonomy;
+
 use Carbon_Fields\Carbon_Fields;
 use Carbon_Field_Taxonomy\Taxonomy_Field;
 
@@ -24,6 +26,7 @@ if ( ! is_cli() ) {
  *
  * @return bool
  */
+
 function is_cli() {
 	if ( defined( 'STDIN' ) ) {
 		return true;
@@ -37,3 +40,4 @@ function is_cli() {
 
 	return false;
 }
+
