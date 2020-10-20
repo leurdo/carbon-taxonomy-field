@@ -50,6 +50,13 @@ class Taxonomy_Field extends Predefined_Options_Field {
 	protected $multiple = false;
 
 	/**
+	 * Default field value
+	 *
+	 * @var array
+	 */
+	protected $default_value = array();
+
+	/**
 	 * Create a field from a certain type with the specified label.
 	 *
 	 * @param string $type  Field type
