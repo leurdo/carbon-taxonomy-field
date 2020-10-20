@@ -306,6 +306,15 @@ class Taxonomy_Field extends Predefined_Options_Field {
 			]
 		);
 	}
+	
+	/**
+	 * Get taxonomy name.
+	 *
+	 * @return string
+	 */
+	public function get_taxonomy() {
+		return $this->tax;
+	}
 
 	/**
 	 * Set taxonomy from where to get select options
